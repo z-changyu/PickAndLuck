@@ -19,6 +19,7 @@
     "check-config": "node --import tsx ./tools/check-config.ts"
   },
   "dependencies": {
+    "pixi.js": "^8.22.0",
     "zod": "^3.25.76"
   },
   "devDependencies": {

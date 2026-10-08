@@ -19,6 +19,7 @@
 export * from './rng'
 export * from './economy'
 export * from './pickup'
+export * from './trip'
 export * from './inventory'
 export * from './progression'
 export * from './gacha'
