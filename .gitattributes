@@ -1,0 +1,9 @@
+# 统一换行：仓库内一律 LF，检出到任何平台都是 LF，避免 Windows / macOS / CI 之间来回改行尾
+* text=auto eol=lf
+
+# 二进制：不要让 git 做任何文本转换或 diff
+*.xlsx binary
+*.png binary
+*.jpg binary
+*.mp3 binary
+*.wav binary
