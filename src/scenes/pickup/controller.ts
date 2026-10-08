@@ -3,9 +3,17 @@ import { findZone } from '../../config/schema'
 import type { ConditionId, RarityId } from '../../config/schema'
 import { analyticsTargetsOf, checkTargets, currentSession, summarize, trackEvent } from '../../core/analytics'
 import type { AnalyticsLog, AnalyticsSummary, TargetCheck } from '../../core/analytics'
+import { settleBag } from '../../core/economy'
+import type { Settlement } from '../../core/economy'
 import { remainingGrids, usedGrids } from '../../core/inventory'
 import type { PickedItem } from '../../core/pickup'
-import { canAffordTrip, isZoneUnlocked, levelFromExp, spendTripStamina } from '../../core/progression'
+import {
+  canAffordTrip,
+  expToNextLevel,
+  isZoneUnlocked,
+  levelFromExp,
+  spendTripStamina,
+} from '../../core/progression'
 import { restoreRng, saveCapacity } from '../../core/save'
 import type { GameSave } from '../../core/save'
 import { pickAt, startTrip } from '../../core/trip'
@@ -41,7 +49,40 @@ export interface BagEntry {
   readonly gridCost: number
 }
 
+/** 当前处在哪个界面：街上捡东西 / 垃圾场称重结算 */
+export type Phase = 'street' | 'yard'
+
+/** 结算单的一行（展示用；数值全部来自 core 的结算单） */
+export interface SettlementLineView {
+  readonly name: string
+  readonly rarity: RarityId
+  readonly rarityCode: string
+  readonly condition: ConditionId
+  readonly unitPrice: number
+  readonly conditionMultiplier: number
+  readonly zoneModifier: number
+  readonly amount: number
+  readonly weightKg: number
+}
+
+export interface SettlementView {
+  readonly zoneName: string
+  readonly lines: readonly SettlementLineView[]
+  readonly itemCount: number
+  readonly totalGrids: number
+  readonly totalWeightKg: number
+  readonly gross: number
+  readonly expGained: number
+  readonly levelBefore: number
+  readonly levelAfter: number
+  readonly expToNext: number | null
+  /** 这次升级新解锁的区域名（没解锁新区域就是空数组） */
+  readonly unlockedZones: readonly string[]
+}
+
 export interface PickupSnapshot {
+  readonly phase: Phase
+  readonly settlement: SettlementView | null
   readonly zoneId: string
   readonly zoneName: string
   readonly zoneFeature: string
@@ -87,6 +128,11 @@ export class PickupController {
   private trip: TripState | null = null
   private zoneId: string
   private message = '点「开始捡拾」出发'
+  private phase: Phase = 'street'
+  /** 已算出（并入账）的结算单，供垃圾场场景与面板展示 */
+  private settlement: Settlement | null = null
+  /** 结算前的等级，用来判断这次有没有升级 / 解锁新区域 */
+  private levelBefore = 1
   private readonly created: boolean
   private readonly savedAt: number | null
   private readonly repairs: readonly string[]
@@ -159,6 +205,8 @@ export class PickupController {
     const analytics = summarize(this.log)
 
     return {
+      phase: this.phase,
+      settlement: this.settlementView(),
       zoneId: zone.id,
       zoneName: zone.name,
       zoneFeature: zone.feature,
@@ -218,9 +266,9 @@ export class PickupController {
     this.notify()
   }
 
-  /** 出发：扣体力 → 开一趟 */
+  /** 出发：扣体力 → 开一趟（只在街上可用） */
   startTrip(now: number): void {
-    if (this.trip !== null) return
+    if (this.trip !== null || this.phase !== 'street') return
 
     const zone = findZone(this.config.zones.zones, this.zoneId)
     if (!canAffordTrip(zone.id, this.save.player.stamina, this.config)) {
@@ -271,30 +319,97 @@ export class PickupController {
   }
 
   /**
-   * 回程：记 trip_complete 埋点 → 卸货 → 落盘。
+   * 回程 → 垃圾场称重结算（T6）。
    *
-   * ⚠️ T5 的「卸货」只是清空背包（还没有垃圾场称重结算，那是 T6）。
-   * 所以 sold / expGained 先记 0 —— 事件契约不变，T6 把这两个值填上即可。
+   * 结算单由 core/economy.settleBag 出（唯一口径），这里只做三件事：
+   *   1. 入账：金币 += 合计金额、经验 += 折算经验
+   *   2. 清空背包、切到垃圾场阶段（称重动画只展示已经入账的数字）
+   *   3. 记 trip_complete 埋点（T5 时 sold/expGained 还是 0，现在填上真实值）
+   * 先入账再动画：这样玩家中途关掉页面也不会「演了一半没拿到钱」。
    */
   returnHome(now: number): void {
     if (this.trip === null) return
 
     const items: readonly PickedItem[] = this.trip.inventory.items
+    const zoneId = this.trip.zoneId
+    const settlement = settleBag(items, zoneId, this.config)
+
+    this.levelBefore = levelFromExp(this.save.player.exp, this.config)
+    const money = this.save.player.money + settlement.gross
+    const exp = this.save.player.exp + settlement.expGained
+
     this.log = trackEvent(this.log, {
       name: 'trip_complete',
       at: now,
-      payload: { zoneId: this.trip.zoneId, itemCount: items.length, sold: 0, expGained: 0 },
+      payload: {
+        zoneId,
+        itemCount: settlement.itemCount,
+        sold: settlement.gross,
+        expGained: settlement.expGained,
+      },
     })
     this.persistLog()
 
-    this.message = items.length > 0 ? `回程卸货：带回来 ${items.length} 件（T6 才会称重结算）` : '回程：这趟什么都没捡到'
+    this.settlement = settlement
+    this.phase = 'yard'
     this.trip = null
-    this.save = { ...this.save, inventory: { capacity: this.save.inventory.capacity, items: [] } }
+    this.save = {
+      ...this.save,
+      player: { ...this.save.player, money, exp },
+      inventory: { capacity: this.save.inventory.capacity, items: [] },
+    }
+    this.message = settlement.itemCount > 0 ? `垃圾场称重：${settlement.itemCount} 件` : '这趟什么都没捡到'
+    this.persistSave(now)
+    this.notify()
+  }
+
+  /** 结算完回街上（可以再跑一趟） */
+  backToStreet(now: number): void {
+    if (this.phase !== 'yard') return
+
+    this.phase = 'street'
+    this.settlement = null
+    this.message = '回到街上：点「开始捡拾」再跑一趟'
     this.persistSave(now)
     this.notify()
   }
 
   // ---------------------------------------------------------------- 内部
+
+  /** 结算单 → 展示用视图（每个数字都取自 core 的结算单，这里不做任何运算） */
+  private settlementView(): SettlementView | null {
+    const settlement = this.settlement
+    if (settlement === null) return null
+
+    const rarityOf = new Map(this.config.rarity.rarities.map((entry) => [entry.id, entry]))
+    const levelAfter = levelFromExp(this.save.player.exp, this.config)
+
+    return {
+      zoneName: findZone(this.config.zones.zones, settlement.zoneId).name,
+      lines: settlement.lines.map((line) => ({
+        name: line.picked.item.name,
+        rarity: line.picked.item.rarity,
+        rarityCode: rarityOf.get(line.picked.item.rarity)?.code ?? '?',
+        condition: line.picked.condition,
+        unitPrice: line.unitPrice,
+        conditionMultiplier: line.conditionMultiplier,
+        zoneModifier: line.zoneModifier,
+        amount: line.amount,
+        weightKg: line.weightKg,
+      })),
+      itemCount: settlement.itemCount,
+      totalGrids: settlement.totalGrids,
+      totalWeightKg: settlement.totalWeightKg,
+      gross: settlement.gross,
+      expGained: settlement.expGained,
+      levelBefore: this.levelBefore,
+      levelAfter,
+      expToNext: expToNextLevel(this.save.player.exp, this.config),
+      unlockedZones: this.config.zones.zones
+        .filter((zone) => isZoneUnlocked(zone, levelAfter) && !isZoneUnlocked(zone, this.levelBefore))
+        .map((zone) => zone.name),
+    }
+  }
 
   private persistSave(now: number): void {
     writeSave(this.store, this.save, now)

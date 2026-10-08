@@ -6,6 +6,7 @@ import {
   expFromSales,
   sellTotal,
   sellUnitPrice,
+  settleBag,
   totalGrids,
   totalWeightKg,
   zonePriceModifierOf,
@@ -73,5 +74,75 @@ describe('economy · 售价公式（验收：Σ(单价 × 品相系数 × 区域
   it('未知区域直接抛错（不静默返回 0 元）', () => {
     expect(() => zonePriceModifierOf('atlantis', config)).toThrow(/atlantis/)
     expect(() => sellUnitPrice(picked('plastic_bottle'), 'atlantis', config)).toThrow()
+  })
+})
+
+describe('economy · 结算单（T6 验收：界面金额与 core 出数逐位一致）', () => {
+  const bag = [picked('plastic_bottle'), picked('old_phone', 'worn'), picked('mantel_clock', 'broken')]
+
+  it('逐件明细 = 单价 × 品相系数 × 区域价格系数，且每个字段都与配置同源', () => {
+    const settlement = settleBag(bag, 'old_town', config)
+    const zoneModifier = zonePriceModifierOf('old_town', config)
+
+    expect(settlement.lines).toHaveLength(bag.length)
+    settlement.lines.forEach((line, index) => {
+      const source = bag[index]
+      expect(source).toBeDefined()
+      if (source === undefined) return
+
+      expect(line.picked).toBe(source)
+      expect(line.unitPrice).toBe(source.item.unitPrice)
+      expect(line.conditionMultiplier).toBe(conditionMultiplierOf(source.condition, config))
+      expect(line.zoneModifier).toBe(zoneModifier)
+      expect(line.amount).toBe(sellUnitPrice(source, 'old_town', config))
+      expect(line.weightKg).toBe(source.item.weightKg)
+    })
+  })
+
+  it('合计 = Σ 逐件明细，且与 sellTotal 逐位一致（同一条公式）', () => {
+    const settlement = settleBag(bag, 'old_town', config)
+    const sum = settlement.lines.reduce((total, line) => total + line.amount, 0)
+
+    expect(settlement.gross).toBe(sum)
+    expect(settlement.gross).toBe(sellTotal(bag, 'old_town', config))
+  })
+
+  it('不取整：白档明细保留小数（0.05 元的塑料瓶不会被抹成 0）', () => {
+    const settlement = settleBag([picked('plastic_bottle')], 'street_alley', config)
+
+    expect(settlement.lines[0]?.amount).toBeCloseTo(0.05, 10)
+    expect(settlement.gross).toBeCloseTo(0.05, 10)
+    expect(settlement.gross).toBeGreaterThan(0)
+  })
+
+  it('经验按合计金额折算', () => {
+    const settlement = settleBag(bag, 'old_town', config)
+    expect(settlement.expGained).toBe(settlement.gross * config.global.level.expPerCurrency)
+  })
+
+  it('件数 / 占格 / 重量与逐件累加一致', () => {
+    const settlement = settleBag(bag, 'old_town', config)
+
+    expect(settlement.itemCount).toBe(bag.length)
+    expect(settlement.totalGrids).toBe(totalGrids(bag))
+    expect(settlement.totalWeightKg).toBe(totalWeightKg(bag))
+  })
+
+  it('空背包 → 全零（不是 NaN）', () => {
+    const settlement = settleBag([], 'street_alley', config)
+
+    expect(settlement.lines).toEqual([])
+    expect(settlement.itemCount).toBe(0)
+    expect(settlement.gross).toBe(0)
+    expect(settlement.expGained).toBe(0)
+    expect(settlement.totalWeightKg).toBe(0)
+  })
+
+  it('同一条街的袋子在两地结算价不同（跑商空间 0.85 ↔ 1.25）', () => {
+    const cheap = settleBag(bag, 'shopping_street', config)
+    const rich = settleBag(bag, 'old_town', config)
+
+    expect(rich.gross).toBeGreaterThan(cheap.gross)
+    expect(rich.gross / cheap.gross).toBeCloseTo(1.25 / 0.85, 6)
   })
 })

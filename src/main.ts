@@ -5,6 +5,7 @@ import { createGameApp, syncCanvasSize } from './render/app'
 import { browserStore, loadAnalyticsLog, loadSave, writeSave } from './render/storage'
 import { PickupController } from './scenes/pickup/controller'
 import { PickupScene } from './scenes/pickup/scene'
+import { YardScene } from './scenes/yard/scene'
 import { mountGamePanel } from './ui/game-panel'
 
 /**
@@ -85,12 +86,28 @@ async function boot(): Promise<void> {
   const app = await createGameApp(stage)
   syncCanvasSize(app, stage)
 
+  // 两个场景共用一块画布，按控制器的阶段显隐（街上捡东西 / 垃圾场称重）
   const scene = new PickupScene(app, controller, config)
   scene.mount()
+  const yard = new YardScene(app, controller, config)
+  yard.mount()
+
+  const syncPhase = (): void => {
+    const inYard = controller.snapshot().phase === 'yard'
+    scene.setVisible(!inYard)
+    yard.setVisible(inYard)
+    if (inYard) yard.start()
+  }
+
+  controller.subscribe(syncPhase)
+  syncPhase()
   mountGamePanel({ host: panel, controller, config })
 
   window.addEventListener('resize', () => {
-    if (syncCanvasSize(app, stage)) scene.layout()
+    if (syncCanvasSize(app, stage)) {
+      scene.layout()
+      yard.layout()
+    }
   })
   window.addEventListener('beforeunload', () => controller.endSession(Date.now()))
 
@@ -104,7 +121,7 @@ async function boot(): Promise<void> {
 
   if (import.meta.env.DEV) {
     // 开发期调试句柄（T8 的调试面板会在此基础上做成 UI；生产构建里这段会被静态剔除）
-    Reflect.set(window, '__pickAndLuck', { config, controller, scene, app })
+    Reflect.set(window, '__pickAndLuck', { config, controller, scene, yard, app })
   }
 }
 

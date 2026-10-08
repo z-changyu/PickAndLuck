@@ -2,8 +2,8 @@ import { Container, Graphics, Text } from 'pixi.js'
 import type { Application, FederatedPointerEvent, Ticker } from 'pixi.js'
 
 import type { FrozenGameConfig } from '../../config/loader'
-import type { ConditionId } from '../../config/schema'
 import type { PickOutcome } from '../../core/trip'
+import { conditionLabel } from '../../ui/format'
 import type { PickupController, PickupSnapshot } from './controller'
 
 /**
@@ -33,7 +33,6 @@ const COLOR_DANGER = 0xc2410c
 const COLOR_INK = 0x1f2328
 const COLOR_MUTED = 0x5a6169
 const FONT = 'system-ui, "Microsoft YaHei", "PingFang SC", sans-serif'
-const CONDITION_LABEL: Record<ConditionId, string> = { pristine: '完好', worn: '磨损', broken: '破损' }
 
 interface Site {
   readonly node: Container
@@ -98,6 +97,12 @@ export class PickupScene {
     this.unsubscribe = this.controller.subscribe(() => this.render())
     this.layout()
     this.render()
+  }
+
+  /** 切到垃圾场阶段时把拾取世界收起来（两个场景共用同一块画布） */
+  setVisible(visible: boolean): void {
+    this.world.visible = visible
+    this.hud.visible = visible
   }
 
   /** 尺寸变化时重排（main.ts 在 resize 时调用） */
@@ -243,7 +248,7 @@ export class PickupScene {
         site.consumedMs = SITE_CONSUMED_MS
         this.spawnToast(
           site,
-          `+${outcome.picked.item.name}（${entry?.code ?? '?'}·${CONDITION_LABEL[outcome.picked.condition]}）`,
+          `+${outcome.picked.item.name}（${entry?.code ?? '?'}·${conditionLabel(outcome.picked.condition)}）`,
           color,
         )
         break
