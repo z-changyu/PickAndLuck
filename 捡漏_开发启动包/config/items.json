@@ -1,0 +1,266 @@
+{
+  "_note": "街头可拾取物品。unitPrice 为基准售价，实际售价 = unitPrice × 品相系数 × 区域价格系数。",
+  "items": [
+    {
+      "id": "plastic_bottle",
+      "name": "塑料瓶",
+      "rarity": "white",
+      "zones": [
+        "all"
+      ],
+      "weightKg": 0.03,
+      "unitPrice": 0.05,
+      "gridCost": 1,
+      "note": "最基础，量大"
+    },
+    {
+      "id": "can",
+      "name": "易拉罐",
+      "rarity": "white",
+      "zones": [
+        "all"
+      ],
+      "weightKg": 0.02,
+      "unitPrice": 0.08,
+      "gridCost": 1,
+      "note": "老王日常任务指定物"
+    },
+    {
+      "id": "flyer",
+      "name": "传单纸",
+      "rarity": "white",
+      "zones": [
+        "shopping_street"
+      ],
+      "weightKg": 0.01,
+      "unitPrice": 0.02,
+      "gridCost": 1,
+      "note": "几乎不值钱，占格子"
+    },
+    {
+      "id": "cardboard",
+      "name": "废纸箱",
+      "rarity": "green",
+      "zones": [
+        "shopping_street"
+      ],
+      "weightKg": 0.5,
+      "unitPrice": 0.6,
+      "gridCost": 1,
+      "note": "量大，需拆解"
+    },
+    {
+      "id": "glass_bottle",
+      "name": "玻璃瓶",
+      "rarity": "green",
+      "zones": [
+        "old_apartment"
+      ],
+      "weightKg": 0.4,
+      "unitPrice": 0.5,
+      "gridCost": 1,
+      "note": "易碎，掉落率受手套影响"
+    },
+    {
+      "id": "old_clothes",
+      "name": "旧衣服",
+      "rarity": "green",
+      "zones": [
+        "old_apartment"
+      ],
+      "weightKg": 0.6,
+      "unitPrice": 1.2,
+      "gridCost": 1,
+      "note": "轻，性价比不错"
+    },
+    {
+      "id": "tire",
+      "name": "废旧轮胎",
+      "rarity": "green",
+      "zones": [
+        "construction_site"
+      ],
+      "weightKg": 6.0,
+      "unitPrice": 4.0,
+      "gridCost": 2,
+      "note": "极重，占 2 格"
+    },
+    {
+      "id": "rattan_basket",
+      "name": "藤编旧筐",
+      "rarity": "green",
+      "zones": [
+        "street_alley",
+        "old_town",
+        "landfill"
+      ],
+      "weightKg": 0.6,
+      "unitPrice": 1.0,
+      "gridCost": 1,
+      "note": "补齐街头巷尾/老城区/填埋场的绿档空缺"
+    },
+    {
+      "id": "copper_wire",
+      "name": "破铜线",
+      "rarity": "blue",
+      "zones": [
+        "construction_site"
+      ],
+      "weightKg": 0.2,
+      "unitPrice": 6.0,
+      "gridCost": 1,
+      "note": "工地特产，轻且值钱"
+    },
+    {
+      "id": "old_phone",
+      "name": "旧手机",
+      "rarity": "blue",
+      "zones": [
+        "old_apartment"
+      ],
+      "weightKg": 0.18,
+      "unitPrice": 15.0,
+      "gridCost": 1,
+      "note": "小区特产"
+    },
+    {
+      "id": "old_appliance",
+      "name": "旧家电",
+      "rarity": "blue",
+      "zones": [
+        "old_apartment"
+      ],
+      "weightKg": 3.5,
+      "unitPrice": 25.0,
+      "gridCost": 3,
+      "note": "占 3 格，需三轮车"
+    },
+    {
+      "id": "old_radio",
+      "name": "旧收音机",
+      "rarity": "blue",
+      "zones": [
+        "street_alley",
+        "shopping_street",
+        "old_town",
+        "landfill"
+      ],
+      "weightKg": 0.35,
+      "unitPrice": 15.0,
+      "gridCost": 1,
+      "note": "补齐四处区域的蓝档空缺（老旧小区已有蓝档）"
+    },
+    {
+      "id": "used_camera",
+      "name": "二手相机",
+      "rarity": "purple",
+      "zones": [
+        "old_town"
+      ],
+      "weightKg": 0.45,
+      "unitPrice": 120.0,
+      "gridCost": 1,
+      "note": "老城区高发"
+    },
+    {
+      "id": "antique_bowl",
+      "name": "古董瓷碗",
+      "rarity": "purple",
+      "zones": [
+        "old_town"
+      ],
+      "weightKg": 0.6,
+      "unitPrice": 180.0,
+      "gridCost": 1,
+      "note": "需手套，易碎"
+    },
+    {
+      "id": "vinyl",
+      "name": "老唱片",
+      "rarity": "purple",
+      "zones": [
+        "shopping_street"
+      ],
+      "weightKg": 0.3,
+      "unitPrice": 150.0,
+      "gridCost": 1,
+      "note": "稀有，收藏党关注"
+    },
+    {
+      "id": "mantel_clock",
+      "name": "老式座钟",
+      "rarity": "purple",
+      "zones": [
+        "street_alley",
+        "old_apartment"
+      ],
+      "weightKg": 3.0,
+      "unitPrice": 150.0,
+      "gridCost": 2,
+      "note": "补齐街头巷尾/老旧小区的紫档空缺"
+    },
+    {
+      "id": "brass_valve",
+      "name": "黄铜阀门",
+      "rarity": "purple",
+      "zones": [
+        "construction_site",
+        "landfill"
+      ],
+      "weightKg": 2.5,
+      "unitPrice": 150.0,
+      "gridCost": 2,
+      "note": "补齐建设工地/填埋场的紫档空缺，重但值钱"
+    },
+    {
+      "id": "rare_sneaker",
+      "name": "绝版球鞋",
+      "rarity": "gold",
+      "zones": [
+        "old_apartment"
+      ],
+      "weightKg": 0.8,
+      "unitPrice": 500.0,
+      "gridCost": 1,
+      "note": "出现率极低"
+    },
+    {
+      "id": "masterpiece",
+      "name": "名家字画",
+      "rarity": "gold",
+      "zones": [
+        "old_town"
+      ],
+      "weightKg": 0.3,
+      "unitPrice": 1200.0,
+      "gridCost": 1,
+      "note": "全游戏最高单价，极稀有"
+    },
+    {
+      "id": "gold_ring",
+      "name": "旧金戒指",
+      "rarity": "gold",
+      "zones": [
+        "street_alley",
+        "shopping_street"
+      ],
+      "weightKg": 0.02,
+      "unitPrice": 700.0,
+      "gridCost": 1,
+      "note": "补齐街头巷尾/商业街区的金档空缺"
+    },
+    {
+      "id": "pocket_watch",
+      "name": "老怀表",
+      "rarity": "gold",
+      "zones": [
+        "construction_site",
+        "landfill"
+      ],
+      "weightKg": 0.1,
+      "unitPrice": 700.0,
+      "gridCost": 1,
+      "note": "补齐建设工地/填埋场的金档空缺"
+    }
+  ]
+}

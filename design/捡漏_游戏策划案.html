@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《捡漏》游戏策划案 v1.0</title>
+<style>
+  :root{
+    --paper:#f7f6f3;
+    --card:#ffffff;
+    --ink:#1f2328;
+    --ink-2:#5a6169;
+    --ink-3:#8b939c;
+    --line:#e6e3dd;
+    --acc:#e2552f;      /* 拾荒橙 */
+    --gold:#c9a227;     /* 宝藏金 */
+    --green:#2f7d6e;    /* 回收绿 */
+    --blue:#3a6ea5;
+    --purple:#7a5aa8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;padding:0 20px 80px;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei","PingFang SC",sans-serif;
+    line-height:1.75;
+    font-size:15px;
+  }
+  .wrap{max-width:1040px;margin:0 auto;}
+
+  /* ---------- 封面 ---------- */
+  .cover{
+    margin:0 -20px 40px;
+    padding:56px 40px 44px;
+    background:
+      radial-gradient(900px 300px at 12% -20%, rgba(201,162,39,.22), transparent 60%),
+      radial-gradient(700px 300px at 88% 120%, rgba(226,85,47,.20), transparent 60%),
+      #1f2328;
+    color:#fff;
+  }
+  .cover .wrap{max-width:1040px;}
+  .kicker{
+    display:inline-block;font-size:12px;letter-spacing:.22em;
+    padding:5px 12px;border:1px solid rgba(255,255,255,.35);
+    border-radius:99px;color:#e9e4d8;margin-bottom:20px;
+  }
+  .cover h1{
+    font-size:44px;margin:0 0 6px;letter-spacing:.02em;
+    background:linear-gradient(92deg,#fff 10%,#f0d67a 55%,#e2552f 100%);
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .cover .sub{font-size:17px;color:#b9bfc6;margin:0 0 26px;}
+  .tagline{
+    font-size:15.5px;color:#e6e1d5;max-width:730px;
+    border-left:3px solid var(--gold);padding-left:16px;line-height:1.85;
+  }
+  .metas{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px;}
+  .meta{
+    background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+    border-radius:10px;padding:9px 14px;font-size:13px;color:#d6dae0;
+  }
+  .meta b{color:#fff;font-weight:600;}
+
+  /* ---------- 区块 ---------- */
+  section{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:28px 32px 30px;margin-bottom:22px;
+  }
+  h2{
+    font-size:21px;margin:0 0 4px;display:flex;align-items:baseline;gap:12px;
+  }
+  h2 .num{
+    font-size:13px;font-weight:700;color:#fff;background:var(--acc);
+    border-radius:7px;padding:2px 9px;letter-spacing:.06em;
+    position:relative;top:-2px;
+  }
+  h2 + .h2sub{color:var(--ink-3);font-size:13.5px;margin:0 0 20px;}
+  h3{font-size:16px;margin:26px 0 10px;color:var(--ink);}
+  h3:first-of-type{margin-top:22px;}
+  h4{font-size:14.5px;margin:18px 0 6px;color:var(--ink-2);}
+  p{margin:10px 0;}
+  ul,ol{margin:10px 0;padding-left:22px;}
+  li{margin:6px 0;}
+  code{
+    background:#f1efe9;border-radius:5px;padding:1px 6px;
+    font-size:13px;font-family:ui-monospace,Consolas,monospace;color:#8a4b2a;
+  }
+  .hl{color:var(--acc);font-weight:600;}
+  .hl-g{color:var(--gold);font-weight:600;}
+  .hl-green{color:var(--green);font-weight:600;}
+
+  /* ---------- 循环图 ---------- */
+  .loop{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:18px 0 6px;}
+  .loop .step{
+    flex:0 0 auto;background:#fbfaf7;border:1px solid var(--line);
+    border-radius:11px;padding:11px 14px;font-size:13.5px;
+    text-align:center;min-width:104px;position:relative;
+  }
+  .loop .step b{display:block;font-size:14px;margin-bottom:2px;}
+  .loop .step span{color:var(--ink-3);font-size:12px;}
+  .loop .arrow{color:var(--ink-3);font-size:15px;}
+  .loop .step.hot{border-color:#f0c4b4;background:#fdf3ef;}
+  .loop .step.gold{border-color:#e8d99c;background:#fdf9ec;}
+  .loopback{
+    margin-top:10px;font-size:13px;color:var(--ink-2);
+    background:#f7f5ef;border-left:3px solid var(--ink-3);
+    border-radius:0 8px 8px 0;padding:9px 14px;
+  }
+
+  /* ---------- 双轨经济 ---------- */
+  .tracks{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0 6px;}
+  @media(max-width:720px){.tracks{grid-template-columns:1fr;}}
+  .track{border-radius:12px;padding:16px 18px;border:1px solid var(--line);}
+  .track.a{background:#f2f8f6;border-color:#cfe4de;}
+  .track.b{background:#fdf7ea;border-color:#ecdfb6;}
+  .track h4{margin:0 0 8px;font-size:14.5px;}
+  .track.a h4{color:var(--green);}
+  .track.b h4{color:#a5841a;}
+  .track p{font-size:13.5px;margin:6px 0;color:var(--ink-2);}
+
+  /* ---------- 表格 ---------- */
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;}
+  th,td{padding:9px 11px;text-align:left;border-bottom:1px solid var(--line);}
+  th{
+    background:#faf9f6;font-weight:600;font-size:12.5px;color:var(--ink-2);
+    letter-spacing:.03em;white-space:nowrap;
+  }
+  tbody tr:hover{background:#fcfbf8;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .t-wrap{overflow-x:auto;}
+
+  /* ---------- 稀有度色块 ---------- */
+  .rar{display:inline-block;padding:1px 8px;border-radius:5px;font-size:12px;font-weight:600;}
+  .r-w{background:#eceae4;color:#5a6169;}
+  .r-g{background:#dff0e6;color:#1f6b45;}
+  .r-b{background:#e0ebf7;color:#25598f;}
+  .r-p{background:#ece2f5;color:#6a4595;}
+  .r-y{background:#faefcd;color:#8d6a12;}
+
+  /* ---------- 卡片网格 ---------- */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin:16px 0;}
+  @media(max-width:720px){.grid{grid-template-columns:1fr;}}
+  .card{background:#fbfaf7;border:1px solid var(--line);border-radius:12px;padding:16px 18px;}
+  .card h4{margin:0 0 8px;font-size:14.5px;color:var(--ink);}
+  .card ul{padding-left:18px;margin:6px 0 0;}
+  .card li{font-size:13.5px;color:var(--ink-2);}
+
+  /* ---------- 时间线 ---------- */
+  .tl{margin:16px 0 4px;border-left:2px solid var(--line);padding-left:0;}
+  .tl .item{position:relative;padding:0 0 18px 24px;}
+  .tl .item:last-child{padding-bottom:0;}
+  .tl .item::before{
+    content:"";position:absolute;left:-7px;top:6px;width:12px;height:12px;
+    border-radius:50%;background:#fff;border:3px solid var(--acc);
+  }
+  .tl .item.g::before{border-color:var(--gold);}
+  .tl .item.green::before{border-color:var(--green);}
+  .tl h4{margin:0 0 4px;font-size:14.5px;}
+  .tl .when{font-size:12px;color:var(--ink-3);letter-spacing:.04em;margin-bottom:4px;}
+  .tl p{font-size:13.5px;color:var(--ink-2);margin:4px 0;}
+
+  /* ---------- 提示条 ---------- */
+  .note{
+    border-radius:11px;padding:14px 18px;margin:16px 0;font-size:13.5px;
+    background:#fdf3ef;border:1px solid #f0c4b4;color:#8a3a1c;
+  }
+  .note.g{background:#f2f8f6;border-color:#cfe4de;color:#1f5f52;}
+  .note.y{background:#fdf9ec;border-color:#e8d99c;color:#7a620f;}
+  .note b{display:block;margin-bottom:4px;}
+
+  footer{text-align:center;color:var(--ink-3);font-size:12.5px;padding:24px 0 0;}
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="kicker">GAME DESIGN DOCUMENT · v1.0</div>
+    <h1>《捡 漏》</h1>
+    <p class="sub">副标题：城市拾荒者 &nbsp;|&nbsp; 一个把「翻垃圾桶」做成上瘾循环的休闲模拟经营</p>
+    <div class="tagline">
+      你在城市街头捡垃圾，运到垃圾场换钱；垃圾场的货架上，摆着一排排贴着问号的<strong>垃圾盲盒</strong>。
+      捡来的钱，一半拿去升级装备，一半拿去赌一个「万一」。<br>
+      —— 稳定的小钱 + 不确定的大钱，就是这款游戏的全部引擎。
+    </div>
+    <div class="metas">
+      <div class="meta">品类 <b>休闲模拟经营 / 收集养成</b></div>
+      <div class="meta">平台 <b>手机端（微信小游戏 + 手游双端）</b></div>
+      <div class="meta">单局时长 <b>3–8 分钟，支持离线收益</b></div>
+      <div class="meta">目标用户 <b>25–40 岁泛休闲 / 盲盒收集人群</b></div>
+      <div class="meta">变现 <b>激励广告为主 + 内购加速</b></div>
+      <div class="meta">研发量级 <b>MVP：4–6 人 × 6 周</b></div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- 0 -->
+  <section>
+    <h2><span class="num">01</span>为什么这个题材成立</h2>
+    <p class="h2sub">先讲清楚「捡垃圾」到底提供了什么情绪价值，这决定了后面所有系统怎么搭。</p>
+
+    <p>「捡垃圾」在玩家心里天然携带三层情绪，而且互相加成：</p>
+    <div class="grid">
+      <div class="card">
+        <h4>① 无成本的占有欲</h4>
+        <ul>
+          <li>现实里没人愿意翻垃圾桶，但在游戏里，<b>弯腰就有收获</b>——这是零门槛的多巴胺。</li>
+          <li>和「开垦荒地」「点击采矿」同一个底层快感，但题材更新鲜、更有反差。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>② 捡漏的赌徒心理</h4>
+        <ul>
+          <li>「这堆垃圾里会不会有值钱的东西」——<b>不确定性本身就是奖励</b>。</li>
+          <li>这一点天然对接盲盒机制，不需要硬拗。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>③ 反差爽感（穷到翻垃圾桶，也能翻身）</h4>
+        <ul>
+          <li>社会底层的身份 + 一夜暴富的可能性，构成强烈的叙事张力。</li>
+          <li>比「我是天选之子」的常规爽文更接地气、更有共鸣。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>④ 与盲盒机制的同源关系</h4>
+        <ul>
+          <li>街头捡垃圾 = <b>免费抽奖</b>；垃圾场盲盒 = <b>付费抽奖</b>。</li>
+          <li>两个抽奖一免费一付费，形成自洽的经济闭环，玩家不会觉得机制是硬塞的。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="note y">
+      <b>风险提醒（题材硬伤）</b>
+      「脏、臭、廉价」是这类题材最大的劝退点。解法必须从第 0 天就定死：<strong>全卡通化的明亮画风 + 垃圾拟人化</strong>（每个垃圾有小表情、小人脸），把「翻垃圾桶」翻译成「寻宝」。视觉上永远不能出现真实的污渍、苍蝇、腐烂感。
+    </div>
+  </section>
+
+  <!-- 1 -->
+  <section>
+    <h2><span class="num">02</span>核心循环</h2>
+    <p class="h2sub">整套玩法的骨架。玩家每一次会话都在跑这个环，环越顺，留存越高。</p>
+
+    <div class="loop">
+      <div class="step"><b>探索</b><span>选区域 · 耗体力</span></div>
+      <div class="arrow">→</div>
+      <div class="step"><b>拾取</b><span>点击 / 滑动捡垃圾</span></div>
+      <div class="arrow">→</div>
+      <div class="step"><b>取舍</b><span>背包格子有限</span></div>
+      <div class="arrow">→</div>
+      <div class="step hot"><b>出售</b><span>垃圾场称重换钱</span></div>
+      <div class="arrow">→</div>
+      <div class="step"><b>升级</b><span>背包 / 载具 / 手套</span></div>
+      <div class="arrow">→</div>
+      <div class="step gold"><b>开盲盒</b><span>把废币赌成藏品</span></div>
+    </div>
+    <div class="loopback">
+      ↺ <b>回到起点</b>：盲盒开出的藏品提升「图鉴等级」→ 图鉴等级给被动加成（载重量 / 稀有物出现率 / 出售溢价）→ 下一趟捡得更快更多。
+      这就是把「赌」和「变强」缝在一起的那根线，也是长线留存的发动机。
+    </div>
+
+    <h3>双轨经济：一个负责吃饭，一个负责做梦</h3>
+    <div class="tracks">
+      <div class="track a">
+        <h4>稳定轨 · 卖废品</h4>
+        <p><b>特点：</b>确定、低回报、无风险、可预期。</p>
+        <p><b>作用：</b>给玩家「保底」，保证任何时候都有正向反馈，不会因为赌输而卡死。</p>
+        <p><b>数值定位：</b>单趟收益 ≈ 一次小升级的 1/3，跑 3 趟能升级一次。</p>
+        <p><b>情绪：</b>踏实、有掌控感。</p>
+      </div>
+      <div class="track b">
+        <h4>运气轨 · 开盲盒</h4>
+        <p><b>特点：</b>高方差、有机会开出远超成本的东西、有保底。</p>
+        <p><b>作用：</b>制造「差一点就出金」的心跳，是会话时长和付费的核心驱动。</p>
+        <p><b>数值定位：</b>材料回收返还率控制在 <span class="hl-g">55%–65%</span>，差额由「藏品 + 图鉴收益」补足，玩家体感仍是赚的。</p>
+        <p><b>情绪：</b>期待、刺激、炫耀。</p>
+      </div>
+    </div>
+
+    <div class="note g">
+      <b>设计要点：盲盒不能直接换回钱</b>
+      这是整套经济最关键的一条红线。盲盒产出的物件分为两类——<strong>「材料」可以卖钱（受控返还率）</strong>，<strong>「藏品」不可出售，只能进图鉴并提供永久被动加成</strong>。
+      好处有三：① 货币通胀可控，不会因为一次欧皇就崩盘；② 收藏动机独立于数值，玩家不会只算账；③ 规避「花钱赌博换钱」的合规与舆论风险。
+    </div>
+  </section>
+
+  <!-- 2 -->
+  <section>
+    <h2><span class="num">03</span>玩法系统拆解</h2>
+    <p class="h2sub">六大子系统，按优先级排序。带 ★ 的属于 MVP 必须做，其余可后置。</p>
+
+    <div class="grid">
+      <div class="card">
+        <h4>★ A. 拾取系统</h4>
+        <ul>
+          <li><b>稀有度五档</b>：白 普通 / 绿 优良 / 蓝 稀有 / 紫 史诗 / 金 传说。</li>
+          <li><b>拾取难度分层</b>：卡在井盖缝里（需撬棍）、泡在污水里（需手套）、被流浪猫守着（需猫粮），工具构成前置门槛。</li>
+          <li><b>操作反馈</b>：点击拾取 + 长按蓄力（稀有物需蓄力）。反馈必须有音效、飘字、震动三件套。</li>
+          <li><b>假点机制</b>：地图上部分垃圾点已空（显示「空空如也」），制造真实感与搜索成本。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>★ B. 背包与载具</h4>
+        <ul>
+          <li><b>格子制背包</b>：初版 6 格，稀有物占多格（旧家电 3 格），逼玩家做取舍。</li>
+          <li><b>载具升级线</b>：手提袋(6格) → 小推车(12) → 三轮车(24) → 电瓶车(40) → 小货车(70)。</li>
+          <li><b>负重影响速度</b>：装满后移动变慢，形成「再捡一个还是回程」的微观决策。</li>
+          <li><b>这是最直观的付费点，也是最不伤体验的付费点。</b></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>★ C. 垃圾场（出售 + 购买）</h4>
+        <ul>
+          <li><b>出售</b>：按「品类单价 × 重量 × 品相系数」结算，结算时播放称重动画 + 金币音效。</li>
+          <li><b>价格浮动</b>：不同垃圾场收购价不同（-15% ~ +25%），形成短距离「跑商」玩法。</li>
+          <li><b>盲盒货架</b>：同时陈列 4–6 种盲盒，价格阶梯从 10 元到 300 元，满足不同钱包。</li>
+          <li><b>每日特价时段</b>：随机 1 小时某盲盒八折，制造每天上线的理由。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>★ D. 盲盒与收藏</h4>
+        <ul>
+          <li><b>概率公示</b>（合规硬要求）：每个盲盒的详细概率必须在购买前可查。</li>
+          <li><b>保底机制</b>：单盒内累计 9 次未出紫，第 10 次必出紫；计数<strong>跨盒独立</strong>（换盒子从 0 计），抽到紫色后清零。</li>
+          <li><b>新手保护</b>：首次开箱必出蓝以上，确保第一次体验是「爽」的。</li>
+          <li><b>重复回收</b>：重复藏品自动拆解为「碎片」，碎片可兑换指定盲盒券——降低挫败感的关键。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>E. NPC 与轻剧情</h4>
+        <ul>
+          <li><b>核心 NPC</b>：垃圾场老板（奸商，负责盲盒）、老王（拾荒前辈，负责教学与情感）、流浪猫（吉祥物，负责萌点）。</li>
+          <li><b>剧情钩子</b>：主角为什么在拾荒？每条「记忆盲盒」开出一段往事碎片，逐步拼出主角身世。</li>
+          <li><b>每日任务</b>：老王派单「今天帮我捡 20 个易拉罐」，奖励盲盒券而非现金——用券引导玩家接触盲盒系统。</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>F. 图鉴与家园（后置）</h4>
+        <ul>
+          <li><b>图鉴</b>：收集率分档给永久加成，是长线目标。</li>
+          <li><b>家园</b>：用捡来的东西装饰自己的小破屋，从铁皮棚一路装成小别墅——最直观的成长可视化。</li>
+          <li><b>称号系统</b>：拾荒学徒 → 破烂王 → 垃圾场大亨 → 城市传奇。</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 -->
+  <section>
+    <h2><span class="num">04</span>盲盒设计（核心系统）</h2>
+    <p class="h2sub">盲盒是这款游戏的心脏。五条产品线，覆盖「入门赌一把」到「重度追限定」的完整人群。</p>
+
+    <div class="t-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>盲盒</th><th class="num">售价</th><th>定位</th>
+          <th class="num">白</th><th class="num">绿</th><th class="num">蓝</th><th class="num">紫</th><th class="num">金</th>
+          <th class="num">材料返还率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>废品盲盒</b></td><td class="num">10 元</td><td>新手入门，随便赌</td>
+          <td class="num">65%</td><td class="num">26%</td><td class="num">7%</td><td class="num">1.8%</td><td class="num">0.2%</td>
+          <td class="num">63%</td>
+        </tr>
+        <tr>
+          <td><b>家电盲盒</b></td><td class="num">60 元</td><td>主力款，出货体感最好</td>
+          <td class="num">20%</td><td class="num">27%</td><td class="num">38%</td><td class="num">13%</td><td class="num">2%</td>
+          <td class="num">60%</td>
+        </tr>
+        <tr>
+          <td><b>古董盲盒</b></td><td class="num">200 元</td><td>高价值款，追紫金</td>
+          <td class="num">4%</td><td class="num">12%</td><td class="num">30%</td><td class="num">42%</td><td class="num">12%</td>
+          <td class="num">64%</td>
+        </tr>
+        <tr>
+          <td><b>记忆盲盒</b></td><td class="num">80 元</td><td>剧情线专属，货币回报低、叙事价值高</td>
+          <td class="num">20%</td><td class="num">30%</td><td class="num">30%</td><td class="num">16%</td><td class="num">4%</td>
+          <td class="num">63%</td>
+        </tr>
+        <tr>
+          <td><b>限定盲盒</b></td><td class="num">300 元</td><td>活动期限定，含绝版外观</td>
+          <td class="num">2%</td><td class="num">8%</td><td class="num">25%</td><td class="num">45%</td><td class="num">20%</td>
+          <td class="num">60%</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="font-size:12.5px;color:var(--ink-3)">
+      注：返还率 = 开出的<strong>可出售材料</strong>价值 ÷ 售价。返还率全线控制在 55%–65%，差额由「藏品图鉴价值 + 保底 + 新手保护」在体感上补足。完整公式见配套《捡漏_数值框架.xlsx》。
+    </p>
+
+    <h3>概率的诚实度：一个必须守住的职业底线</h3>
+    <ul>
+      <li><b>公示要真</b>：公示概率必须与后台实际配置一一对应，不要搞「隐藏权重」。这类事一旦被发现，游戏口碑会直接崩。</li>
+      <li><b>保底要写清楚</b>：保底计数、跨盒是否累积、抽到后是否重置，全部要在界面里说明（本作口径：单盒内累计、跨盒独立、出货清零）。</li>
+      <li><b>不做「假随机」以外的心理操控</b>：可以做新手保护和保底（正向），但不做「久不上线就砍出货率」这类惩罚性暗改。</li>
+      <li><b>未成年人保护</b>：实名与消费限额，这是上线硬门槛，不是可选功能。</li>
+    </ul>
+
+    <div class="note">
+      <b>为什么把「重复物品」做成碎片而不是金币</b>
+      如果重复物品直接换金币，玩家会自动算出「其实在赔钱」，赌博的浪漫感立刻消失。换成「碎片」——碎片只能换盲盒券，不能换钱——货币账本被切开，玩家只会记得「我又攒到一次免费开箱」，而不是「我亏了 4 块」。这是体验设计，不是数值作弊。
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section>
+    <h2><span class="num">05</span>节奏设计：前 30 分钟决定生死</h2>
+    <p class="h2sub">休闲游戏的次日留存，90% 在前 30 分钟就注定了。下面是逐分钟的意图表。</p>
+
+    <div class="t-wrap">
+    <table>
+      <thead>
+        <tr><th>时间</th><th>玩家在做什么</th><th>我们要达成的目标</th><th>关键钩子</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0–2 min</td><td>第一次点击，捡到 8 个塑料瓶</td><td>学会唯一的核心动作</td><td>清脆音效 + 飘字 + 轻微震动</td></tr>
+        <tr><td>2–5 min</td><td>走到垃圾场称重，拿到约 12 元</td><td>建立「捡 → 卖」闭环</td><td>称重动画 + 金币哗啦音效</td></tr>
+        <tr><td>5–8 min</td><td>花 10 元买第一次背包扩容</td><td>完成第一次消费，感受成长</td><td>立刻显示「现在能多装 2 件」</td></tr>
+        <tr><td>8–12 min</td><td>解锁盲盒货架，买第一个 10 元盲盒</td><td>引入运气系统</td><td><b>首次开箱必出蓝</b>（新手保护）</td></tr>
+        <tr><td>12–20 min</td><td>开出「旧收音机」，图鉴第一次点亮</td><td>建立收集动机</td><td>图鉴点 + 金光特效 + 图鉴进度条</td></tr>
+        <tr><td>20–30 min</td><td>接老王日常任务，拿到盲盒券</td><td>建立「明天再来」的习惯</td><td>解锁第二区域「商业街区」</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>区域解锁与难度曲线</h3>
+    <div class="t-wrap">
+    <table>
+      <thead>
+        <tr><th>区域</th><th class="num">解锁等级</th><th class="num">单趟体力</th><th>垃圾特征</th><th>新解锁</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>街头巷尾</td><td class="num">Lv.1</td><td class="num">10</td><td>塑料瓶 / 易拉罐，纯教学区</td><td>废品盲盒</td></tr>
+        <tr><td>商业街区</td><td class="num">Lv.3</td><td class="num">14</td><td>纸箱多、传单多，量大利薄</td><td>背包扩容 · 小推车</td></tr>
+        <tr><td>老旧小区</td><td class="num">Lv.6</td><td class="num">18</td><td>旧家电、旧衣服，重但值钱</td><td>家电盲盒</td></tr>
+        <tr><td>建设工地</td><td class="num">Lv.10</td><td class="num">24</td><td>铜线、轮胎，蓝绿密集区</td><td>撬棍 · 三轮车</td></tr>
+        <tr><td>老城区</td><td class="num">Lv.15</td><td class="num">30</td><td>古董、字画出没，紫金高发</td><td>古董盲盒 · 记忆盲盒</td></tr>
+        <tr><td>城郊填埋场</td><td class="num">Lv.20</td><td class="num">40</td><td>全品类高稀有度，体力消耗大</td><td>限定盲盒 · 小货车</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="note y">
+      <b>一句话说清难度曲线的设计原则</b>
+      新区域的<strong>稀有度</strong>必须明显高于旧区域（否则没有去的理由），但<strong>单位体力收益</strong>只允许温和增长（否则旧区域立刻作废）。我们靠「单趟件数变多 + 稀有物出现率提升」来做增长，而不是靠拉高单件价格——这样旧区域在体力便宜时依然是效率选择，玩家永远有两个合理选项。
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section>
+    <h2><span class="num">06</span>留存与商业化</h2>
+    <p class="h2sub">留存靠「明天有理由回来」，付费靠「等不及」和「想要好看」。</p>
+
+    <h3>留存结构</h3>
+    <div class="grid">
+      <div class="card">
+        <h4>日留存</h4>
+        <ul>
+          <li>体力自然恢复 + 一键领取离线收益（离线最多 8 小时，看广告翻倍）</li>
+          <li>老王每日 3 个日常任务，奖励盲盒券</li>
+          <li>垃圾场每日特价时段（随机某盲盒 8 折）</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>周留存</h4>
+        <ul>
+          <li>周榜「本周拾荒王」，按本周累计出售额排名</li>
+          <li>周末限时盲盒（产出限定时装/载具皮肤）</li>
+          <li>周任务链：完成给一次免费十连</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>长线</h4>
+        <ul>
+          <li>图鉴收集率（分 25% / 50% / 75% / 100% 四档给永久加成）</li>
+          <li>家园装修进度（可视化成长）</li>
+          <li>赛季制：每赛季换主题盲盒池 + 新区域</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>社交（后置）</h4>
+        <ul>
+          <li>好友互访家园、互送「今日捡到的最好一件」</li>
+          <li>好友可「顺手牵羊」一次（损失极小，制造话题）</li>
+          <li>晒盲盒开出结果到聊天/朋友圈（免费获客）</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>商业化结构</h3>
+    <div class="t-wrap">
+    <table>
+      <thead>
+        <tr><th>类型</th><th>具体设计</th><th>设计意图</th><th class="num">预计占比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>激励广告</td><td>翻倍收益 / 免费开一次盲盒 / 体力恢复 / 离线收益翻倍</td><td>零门槛变现，也是免费玩家的主要成长路径</td><td class="num">≈ 55%</td></tr>
+        <tr><td>盲盒券</td><td>直接购买盲盒，或买券包</td><td>核心付费点，玩家为「赌」和「收集」买单</td><td class="num">≈ 25%</td></tr>
+        <tr><td>功能性内购</td><td>背包扩容 / 载具升级加速 / 手套</td><td>降低摩擦，付费即提速，不设硬墙</td><td class="num">≈ 12%</td></tr>
+        <tr><td>外观内购</td><td>载具皮肤 / 角色时装 / 家园家具</td><td>身份表达，无数值影响，口碑友好</td><td class="num">≈ 8%</td></tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="note g">
+      <b>付费红线（团队必须共同遵守）</b>
+      ① 不设「不付费就玩不下去」的数值墙——所有资源都能靠肝获得；<br>
+      ② 广告永远可选，不做强制插屏打断核心操作；<br>
+      ③ 盲盒概率真实公示，不做暗改；<br>
+      ④ 未成年人实名 + 消费限额，上线前必须过审。
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section>
+    <h2><span class="num">07</span>版本路线图</h2>
+    <p class="h2sub">每个版本只回答一个问题，不要提前做后面的系统。</p>
+
+    <div class="tl">
+      <div class="item">
+        <div class="when">MVP · 4–6 周 · 目标：验证「好玩」</div>
+        <h4>最小可玩闭环</h4>
+        <p>1 个区域 · 6 种垃圾 · 1 种盲盒 · 手提袋/小推车两级载具 · 基础出售结算。</p>
+        <p><b>验证指标：</b>测试者是否愿意主动再玩一趟？单次会话平均跑几趟？如果 10 个人里不到 6 个愿意跑第二趟，<strong>停下，改核心循环，不要往下做</strong>。</p>
+      </div>
+      <div class="item green">
+        <div class="when">v0.5 · 6–8 周 · 目标：验证「留得住」</div>
+        <h4>内容扩容 + 收集系统</h4>
+        <p>3 个区域 · 20 种垃圾 · 4 种盲盒 · 图鉴系统 · 保底与新手保护 · 老王日常任务。</p>
+        <p><b>验证指标：</b>次日留存 ≥ 35%，三日留存 ≥ 20%，单次会话时长 ≥ 6 分钟。</p>
+      </div>
+      <div class="item g">
+        <div class="when">v1.0 · 8–10 周 · 目标：验证「赚得到」</div>
+        <h4>商业化接入 + 剧情</h4>
+        <p>6 个区域 · 全盲盒池 · NPC 剧情线 · 家园系统 · 排行榜 · 广告与内购接入 · 合规过审。</p>
+        <p><b>验证指标：</b>广告渗透率 ≥ 70%，付费率 ≥ 2.5%，ARPDAU 达标。</p>
+      </div>
+      <div class="item">
+        <div class="when">v1.5+ · 持续迭代</div>
+        <h4>长线运营</h4>
+        <p>赛季制主题盲盒 · 限时区域 · 好友互访 · 跨服排行榜 · UGC 家园分享。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section>
+    <h2><span class="num">08</span>风险清单与验证指标</h2>
+    <p class="h2sub">提前把坑列出来，比上线后救火便宜十倍。</p>
+
+    <div class="t-wrap">
+    <table>
+      <thead>
+        <tr><th>风险</th><th class="num">等级</th><th>具体表现</th><th>应对方案</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>题材劝退</b></td><td class="num">高</td>
+          <td>玩家觉得「翻垃圾桶」脏、low，不愿分享</td>
+          <td>全卡通明亮画风 + 垃圾拟人化 + 「寻宝」话术体系，视觉上零污渍</td>
+        </tr>
+        <tr>
+          <td><b>盲盒被指赌博</b></td><td class="num">高</td>
+          <td>舆论/合规风险，渠道下架</td>
+          <td>概率真实公示 + 保底 + 藏品不可变现 + 未成年保护，从设计层面切断「赌钱」链条</td>
+        </tr>
+        <tr>
+          <td><b>核心循环枯燥</b></td><td class="num">高</td>
+          <td>跑了 5 趟就腻，重复感强</td>
+          <td>区域差异化垃圾池 + 拾取小游戏机制 + 每日价格浮动 + 剧情钩子持续投放</td>
+        </tr>
+        <tr>
+          <td><b>经济通胀</b></td><td class="num">中</td>
+          <td>中后期钱多到没地方花，游戏失去目标</td>
+          <td>升级成本指数曲线 + 盲盒作为持续金币回收池 + 赛季新盲盒池消耗</td>
+        </tr>
+        <tr>
+          <td><b>盲盒挫败</b></td><td class="num">中</td>
+          <td>连续非酋后弃游</td>
+          <td>保底 + 重复转碎片 + 新手保护 + 「每日首次开箱必出绿以上」的软保护</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <h3>上线前必须盯住的四个数字</h3>
+    <div class="grid">
+      <div class="card"><h4>D1 留存</h4><ul><li>休闲游戏生死线：<b>≥ 35%</b></li><li>低于 25% 说明新手引导或首个盲盒体验有问题</li></ul></div>
+      <div class="card"><h4>单次会话时长</h4><ul><li>目标 <b>6–10 分钟</b></li><li>低于 4 分钟说明循环跑不通或太快见底</li></ul></div>
+      <div class="card"><h4>盲盒购买转化</h4><ul><li>首次会话内买过盲盒的玩家比例 <b>≥ 60%</b></li><li>低于 40% 说明货架引导不到位</li></ul></div>
+      <div class="card"><h4>广告渗透率</h4><ul><li>目标 <b>≥ 70%</b>（看广告玩家占日活）</li><li>激励入口埋点位置比奖励力度更重要</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 8 -->
+  <section>
+    <h2><span class="num">09</span>命名与美术方向</h2>
+    <p class="h2sub">名字要一眼说清「捡便宜 + 淘宝贝」的双重含义。</p>
+
+    <h3>命名候选</h3>
+    <div class="t-wrap">
+    <table>
+      <thead><tr><th>名称</th><th>优点</th><th>顾虑</th><th class="num">推荐度</th></tr></thead>
+      <tbody>
+        <tr><td><b>《捡漏》</b></td><td>双关极佳：拾荒 + 淘到便宜货，完美命中盲盒机制，朗朗上口</td><td>需要副标题补充题材辨识度</td><td class="num">★★★★★</td></tr>
+        <tr><td>《破烂王》</td><td>接地气、有灵魂，主角感强</td><td>略显土，女性用户接受度可能偏低</td><td class="num">★★★☆☆</td></tr>
+        <tr><td>《垃圾场大亨》</td><td>经营感强，直白</td><td>少了「赌」的暗示，不够上瘾</td><td class="num">★★★☆☆</td></tr>
+        <tr><td>《翻箱倒柜》</td><td>动作感强，画面感好</td><td>不像手游名，更像小游戏名</td><td class="num">★★☆☆☆</td></tr>
+      </tbody>
+    </table>
+    </div>
+    <p><b>主推：</b><span class="hl">《捡漏》</span>（英文名 <code>Pick &amp; Luck</code>），副标题「城市拾荒者」。</p>
+
+    <h3>美术方向</h3>
+    <ul>
+      <li><b>风格</b>：卡通低多边形 + 明亮高饱和，参考《动物森友会》的温暖感与《潜水员戴夫》的市井幽默。</li>
+      <li><b>垃圾</b>：全部拟人化，每件垃圾有小眼睛和小表情。捡到时它会「哎呀」一声，被卖掉时会「挥手告别」。</li>
+      <li><b>盲盒</b>：统一用牛皮纸 + 问号的设计语言，稀有度靠盒子的边角光泽和飘带颜色区分，一眼可辨。</li>
+      <li><b>色调</b>：主色暖黄 + 回收绿，强调色用金（宝藏）与橙红（警示/兴奋）。避免任何灰暗、污损的色调。</li>
+      <li><b>UI</b>：圆角、厚描边、贴纸感，按钮要有「按下会弹」的拟物反馈。</li>
+    </ul>
+  </section>
+
+  <footer>
+    《捡漏》游戏策划案 v1.0 &nbsp;·&nbsp; 配套文件：《捡漏_数值框架.xlsx》<br>
+    数值均为首版调参基线，须经 MVP 实测迭代
+  </footer>
+
+</div>
+</body>
+</html>

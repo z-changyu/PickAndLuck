@@ -1,0 +1,12 @@
+{
+  // 「逻辑层纯净」的第二道防线：
+  //   - lib 里没有 DOM，core/ 里出现 window / document / localStorage 会直接编译失败
+  //   - types 为空，core/ 拿不到任何平台 SDK 的全局类型（PixiJS / Cocos / 微信）
+  // 第一道防线是 eslint.config.js 里的 no-restricted-imports（见 .codebuddy/rules/core-purity.md）。
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "lib": ["ES2022"],
+    "types": []
+  },
+  "include": ["src/core", "src/config"]
+}

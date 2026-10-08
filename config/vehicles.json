@@ -1,0 +1,75 @@
+{
+  "_note": "载具与升级。saveUpTrips 目标 8–18 趟；paybackTrips 目标 3–8 趟。数值由策划表回算，仅作断言用。",
+  "vehicles": [
+    {
+      "id": "tote_bag",
+      "name": "手提袋",
+      "grids": 6,
+      "upgradeCostFromPrev": 0,
+      "note": "初始载具",
+      "referenceZone": "street_alley"
+    },
+    {
+      "id": "handcart",
+      "name": "小推车",
+      "grids": 12,
+      "upgradeCostFromPrev": 80,
+      "note": "第 1 次升级：必须 20 分钟内可达成",
+      "referenceZone": "shopping_street"
+    },
+    {
+      "id": "tricycle",
+      "name": "三轮车",
+      "grids": 24,
+      "upgradeCostFromPrev": 350,
+      "note": "第 2 次升级：旧家电终于装得下",
+      "referenceZone": "construction_site"
+    },
+    {
+      "id": "e_bike",
+      "name": "电瓶车",
+      "grids": 40,
+      "upgradeCostFromPrev": 1200,
+      "note": "第 3 次升级：可配合广告加速",
+      "referenceZone": "old_town"
+    },
+    {
+      "id": "light_truck",
+      "name": "小货车",
+      "grids": 70,
+      "upgradeCostFromPrev": 4000,
+      "note": "第 4 次升级：长线目标，需进度条",
+      "referenceZone": "landfill"
+    }
+  ],
+  "upgradeCheckpoints": [
+    {
+      "to": "handcart",
+      "saveUpTrips": 8.9,
+      "paybackTrips": 3.0,
+      "beforeTripRevenue": 9.0,
+      "afterTripRevenue": 26.6
+    },
+    {
+      "to": "tricycle",
+      "saveUpTrips": 13.2,
+      "paybackTrips": 3.4,
+      "beforeTripRevenue": 26.6,
+      "afterTripRevenue": 101.76
+    },
+    {
+      "to": "e_bike",
+      "saveUpTrips": 11.8,
+      "paybackTrips": 5.4,
+      "beforeTripRevenue": 101.76,
+      "afterTripRevenue": 224.0
+    },
+    {
+      "to": "light_truck",
+      "saveUpTrips": 17.9,
+      "paybackTrips": 7.3,
+      "beforeTripRevenue": 224.0,
+      "afterTripRevenue": 548.33
+    }
+  ]
+}

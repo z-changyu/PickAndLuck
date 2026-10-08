@@ -1,0 +1,103 @@
+/* 《捡漏》基础设计变量：暖黄 + 回收绿，避免任何灰暗、污损的色调 */
+:root {
+  --paper: #f7f6f3;
+  --card: #ffffff;
+  --ink: #1f2328;
+  --ink-2: #5a6169;
+  --ink-3: #8b939c;
+  --line: #e6e3dd;
+  --acc: #e2552f; /* 拾荒橙 */
+  --gold: #c9a227; /* 宝藏金 */
+  --green: #2f7d6e; /* 回收绿 */
+  --radius: 16px;
+  --font: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  padding: 24px;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+#app {
+  width: 100%;
+  max-width: 560px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 28px 32px 32px;
+  box-shadow: 0 1px 2px rgb(31 35 40 / 4%), 0 12px 32px -18px rgb(31 35 40 / 22%);
+}
+
+.card--error {
+  border-color: #f0c4b4;
+  background: #fdf3ef;
+}
+
+.status {
+  margin: 0 0 18px;
+  font-size: 20px;
+  letter-spacing: 0.02em;
+}
+
+.status--ok {
+  color: var(--green);
+}
+
+.status--ok::before {
+  content: '✓ ';
+  color: var(--green);
+}
+
+.status--error {
+  color: #8a3a1c;
+}
+
+.meta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 6px 16px;
+  margin: 0;
+  font-size: 14px;
+}
+
+.meta dt {
+  color: var(--ink-3);
+}
+
+.meta dd {
+  margin: 0;
+  color: var(--ink);
+}
+
+.issues {
+  margin: 0 0 14px;
+  padding-left: 20px;
+  font-size: 13.5px;
+  color: #8a3a1c;
+}
+
+.issues li + li {
+  margin-top: 8px;
+}
+
+.hint {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ink-2);
+}

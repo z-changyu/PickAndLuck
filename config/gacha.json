@@ -1,0 +1,137 @@
+{
+  "_note": "盲盒配置。materialReturnRate 目标区间 0.55–0.65，低于 0.50 玩家会觉得被坑，高于 0.70 玩家不再需要肝。pityCounter 按盒设定（0.55–0.65 的区间对「含保底」口径同样成立），returnRateWithPity 是含保底的派生值。",
+  "pity": {
+    "targetRarity": "purple",
+    "scope": "per_box",
+    "resetOnHit": true,
+    "newPlayerFirstPullMinRarity": "blue"
+  },
+  "cost": {
+    "currency": "money"
+  },
+  "duplicateConvert": {
+    "enabled": true,
+    "output": "shard",
+    "shardPerRarity": {
+      "white": 1,
+      "green": 2,
+      "blue": 6,
+      "purple": 25,
+      "gold": 100
+    },
+    "shardExchange": [
+      {
+        "shards": 100,
+        "reward": "junk_box_ticket",
+        "note": "100 碎片换 1 张废品盲盒券"
+      },
+      {
+        "shards": 600,
+        "reward": "appliance_box_ticket",
+        "note": "首版基线，待调"
+      }
+    ]
+  },
+  "boxes": [
+    {
+      "id": "junk_box",
+      "name": "废品盲盒",
+      "price": 10,
+      "rates": {
+        "white": 0.65,
+        "green": 0.26,
+        "blue": 0.07,
+        "purple": 0.018,
+        "gold": 0.002
+      },
+      "pityCounter": 150,
+      "ratesSum": 1.0,
+      "expectedMaterialValue": 6.31,
+      "materialReturnRate": 0.631,
+      "returnRateWithPity": 0.6477,
+      "expectedCodexPoints": 8.61,
+      "isStoryBox": false,
+      "positioning": "新手入门，随便赌"
+    },
+    {
+      "id": "appliance_box",
+      "name": "家电盲盒",
+      "price": 60,
+      "rates": {
+        "white": 0.2,
+        "green": 0.27,
+        "blue": 0.38,
+        "purple": 0.13,
+        "gold": 0.02
+      },
+      "pityCounter": 15,
+      "ratesSum": 1.0,
+      "expectedMaterialValue": 35.72,
+      "materialReturnRate": 0.5953,
+      "returnRateWithPity": 0.6371,
+      "expectedCodexPoints": 48.72,
+      "isStoryBox": false,
+      "positioning": "主力款，出货体感最好"
+    },
+    {
+      "id": "antique_box",
+      "name": "古董盲盒",
+      "price": 200,
+      "rates": {
+        "white": 0.04,
+        "green": 0.12,
+        "blue": 0.3,
+        "purple": 0.42,
+        "gold": 0.12
+      },
+      "pityCounter": 10,
+      "ratesSum": 1.0,
+      "expectedMaterialValue": 128.32,
+      "materialReturnRate": 0.6416,
+      "returnRateWithPity": 0.6418,
+      "expectedCodexPoints": 168.76,
+      "isStoryBox": false,
+      "positioning": "高价值款，追紫金"
+    },
+    {
+      "id": "memory_box",
+      "name": "记忆盲盒",
+      "price": 80,
+      "rates": {
+        "white": 0.2,
+        "green": 0.3,
+        "blue": 0.3,
+        "purple": 0.16,
+        "gold": 0.04
+      },
+      "pityCounter": 15,
+      "ratesSum": 1.0,
+      "expectedMaterialValue": 50.0,
+      "materialReturnRate": 0.625,
+      "returnRateWithPity": 0.6439,
+      "expectedCodexPoints": 67.0,
+      "isStoryBox": true,
+      "positioning": "剧情专属，货币回报低"
+    },
+    {
+      "id": "limited_box",
+      "name": "限定盲盒",
+      "price": 300,
+      "rates": {
+        "white": 0.02,
+        "green": 0.08,
+        "blue": 0.25,
+        "purple": 0.45,
+        "gold": 0.2
+      },
+      "pityCounter": 10,
+      "ratesSum": 1.0,
+      "expectedMaterialValue": 178.84,
+      "materialReturnRate": 0.5961,
+      "returnRateWithPity": 0.5961,
+      "expectedCodexPoints": 235.5,
+      "isStoryBox": false,
+      "positioning": "活动限定，含绝版外观"
+    }
+  ]
+}

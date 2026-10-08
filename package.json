@@ -1,0 +1,35 @@
+{
+  "name": "pick-and-luck",
+  "private": true,
+  "version": "0.1.0",
+  "description": "《捡漏》pick-and-luck — 街头拾荒 + 盲盒收集 休闲模拟经营（微信小游戏首发）",
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scriptsNote": "本仓库路径含 '&'（Pick&Luck），会让 npm 的 node_modules/.bin shim 在 cmd 下断句失败，因此脚本一律直接调用 node + 具体入口文件。对外命令保持不变：npm run dev / npm test / npm run lint / npm run build / npm run check-config。",
+  "scripts": {
+    "dev": "node ./node_modules/vite/bin/vite.js",
+    "build": "node ./node_modules/typescript/bin/tsc -p tsconfig.json --noEmit && node ./node_modules/vite/bin/vite.js build",
+    "preview": "node ./node_modules/vite/bin/vite.js preview",
+    "test": "node ./node_modules/vitest/vitest.mjs",
+    "test:run": "node ./node_modules/vitest/vitest.mjs run",
+    "typecheck": "node ./node_modules/typescript/bin/tsc -p tsconfig.json --noEmit && node ./node_modules/typescript/bin/tsc -p tsconfig.core.json --noEmit",
+    "lint": "node ./node_modules/eslint/bin/eslint.js .",
+    "check-config": "node --import tsx ./tools/check-config.ts"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.4",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.1",
+    "vite": "^8.3.3",
+    "vitest": "^5.0.3"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "_note": "全局参数。第一版基线，需 MVP 实测后调。",
+  "version": "1.0.0",
+  "game": {
+    "name": "捡漏",
+    "codeName": "pick-and-luck",
+    "subtitle": "城市拾荒者"
+  },
+  "player": {
+    "initialMoney": 0,
+    "initialVehicle": "tote_bag",
+    "initialStamina": 60,
+    "maxStamina": 60,
+    "staminaRecoverPerMinute": 0.5,
+    "offlineStaminaCapHours": 8,
+    "adStaminaRefillAmount": 30,
+    "adStaminaRefillDailyLimit": 3
+  },
+  "level": {
+    "expPerCurrency": 1,
+    "cumulativeExp": [0, 20, 50, 90, 140, 200, 280, 380, 500, 640, 800, 1000, 1250, 1550, 1900, 2300, 2800, 3400, 4100, 4900]
+  },
+  "sell": {
+    "conditionMultiplier": {
+      "pristine": 1.0,
+      "worn": 0.8,
+      "broken": 0.5
+    },
+    "conditionWeights": {
+      "pristine": 0.5,
+      "worn": 0.35,
+      "broken": 0.15
+    },
+    "zonePriceModifier": {
+      "street_alley": 1.0,
+      "shopping_street": 0.85,
+      "old_apartment": 1.05,
+      "construction_site": 1.1,
+      "old_town": 1.25,
+      "landfill": 0.95
+    }
+  },
+  "grids": {
+    "expandGrids": 2,
+    "expandCostPerGrid": 5
+  },
+  "analytics": {
+    "sessionMinutesMin": 6,
+    "sessionMinutesMax": 10,
+    "sessionTripsMin": 3,
+    "firstGachaOpenMinutesMax": 12,
+    "gachaBuyConversionMin": 0.6
+  },
+  "debug": {
+    "rngSeed": 20261008
+  }
+}

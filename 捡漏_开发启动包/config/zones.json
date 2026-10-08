@@ -1,0 +1,113 @@
+{
+  "_note": "区域产出分布。avgUnitValue / perStaminaAtRef12Grids 由策划表派生，仅作回归断言用，运行时请实时计算。",
+  "zones": [
+    {
+      "id": "street_alley",
+      "name": "街头巷尾",
+      "unlockLevel": 1,
+      "staminaCost": 10,
+      "dropRates": {
+        "white": 0.62,
+        "green": 0.34093,
+        "blue": 0.03587,
+        "purple": 0.003,
+        "gold": 0.0002
+      },
+      "dropRatesSum": 1.0,
+      "avgUnitValue": 1.5,
+      "perStaminaAtRef12Grids": 1.8,
+      "emptyPointRate": 0.2,
+      "feature": "塑料瓶/易拉罐，纯教学区"
+    },
+    {
+      "id": "shopping_street",
+      "name": "商业街区",
+      "unlockLevel": 3,
+      "staminaCost": 14,
+      "dropRates": {
+        "white": 0.56,
+        "green": 0.38288,
+        "blue": 0.05172,
+        "purple": 0.005,
+        "gold": 0.0004
+      },
+      "dropRatesSum": 1.0,
+      "avgUnitValue": 2.2167,
+      "perStaminaAtRef12Grids": 1.9,
+      "emptyPointRate": 0.18,
+      "feature": "纸箱传单多，量大利薄"
+    },
+    {
+      "id": "old_apartment",
+      "name": "老旧小区",
+      "unlockLevel": 6,
+      "staminaCost": 18,
+      "dropRates": {
+        "white": 0.5,
+        "green": 0.42971,
+        "blue": 0.06169,
+        "purple": 0.008,
+        "gold": 0.0006
+      },
+      "dropRatesSum": 1.0,
+      "avgUnitValue": 3.0001,
+      "perStaminaAtRef12Grids": 2.0,
+      "emptyPointRate": 0.16,
+      "feature": "旧家电旧衣服，重但值钱"
+    },
+    {
+      "id": "construction_site",
+      "name": "建设工地",
+      "unlockLevel": 10,
+      "staminaCost": 24,
+      "dropRates": {
+        "white": 0.44,
+        "green": 0.46336,
+        "blue": 0.08364,
+        "purple": 0.012,
+        "gold": 0.001
+      },
+      "dropRatesSum": 1.0,
+      "avgUnitValue": 4.24,
+      "perStaminaAtRef12Grids": 2.12,
+      "emptyPointRate": 0.15,
+      "feature": "铜线轮胎，蓝绿密集"
+    },
+    {
+      "id": "old_town",
+      "name": "老城区",
+      "unlockLevel": 15,
+      "staminaCost": 30,
+      "dropRates": {
+        "white": 0.39,
+        "green": 0.50193,
+        "blue": 0.08857,
+        "purple": 0.018,
+        "gold": 0.0015
+      },
+      "dropRatesSum": 1.0,
+      "avgUnitValue": 5.6,
+      "perStaminaAtRef12Grids": 2.24,
+      "emptyPointRate": 0.14,
+      "feature": "古董字画出没，紫金高发"
+    },
+    {
+      "id": "landfill",
+      "name": "城郊填埋场",
+      "unlockLevel": 20,
+      "staminaCost": 40,
+      "dropRates": {
+        "white": 0.34,
+        "green": 0.48776,
+        "blue": 0.14524,
+        "purple": 0.025,
+        "gold": 0.002
+      },
+      "dropRatesSum": 1.0,
+      "avgUnitValue": 7.8334,
+      "perStaminaAtRef12Grids": 2.35,
+      "emptyPointRate": 0.12,
+      "feature": "全品类高稀有，体力消耗大"
+    }
+  ]
+}

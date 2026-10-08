@@ -1,0 +1,55 @@
+{
+  "_note": "稀有度基准。materialValue 用于盲盒货币返还率计算；streetAvgValue 用于区域收益估算。",
+  "rarities": [
+    {
+      "id": "white",
+      "code": "白",
+      "name": "普通",
+      "order": 1,
+      "materialValue": 1.0,
+      "codexPoints": 1,
+      "streetAvgValue": 0.05,
+      "color": "#ECEAE4"
+    },
+    {
+      "id": "green",
+      "code": "绿",
+      "name": "优良",
+      "order": 2,
+      "materialValue": 4.0,
+      "codexPoints": 6,
+      "streetAvgValue": 1.0,
+      "color": "#DFF0E6"
+    },
+    {
+      "id": "blue",
+      "code": "蓝",
+      "name": "稀有",
+      "order": 3,
+      "materialValue": 18.0,
+      "codexPoints": 30,
+      "streetAvgValue": 15.0,
+      "color": "#E0EBF7"
+    },
+    {
+      "id": "purple",
+      "code": "紫",
+      "name": "史诗",
+      "order": 4,
+      "materialValue": 120.0,
+      "codexPoints": 150,
+      "streetAvgValue": 150.0,
+      "color": "#ECE2F5"
+    },
+    {
+      "id": "gold",
+      "code": "金",
+      "name": "传说",
+      "order": 5,
+      "materialValue": 600.0,
+      "codexPoints": 800,
+      "streetAvgValue": 700.0,
+      "color": "#FAEFCD"
+    }
+  ]
+}
